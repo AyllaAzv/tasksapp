@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tasks/model/usuario.dart';
+import 'package:tasks/pages/home_page.dart';
 import 'package:tasks/pages/login_page.dart';
+import 'package:tasks/utils/nav.dart';
 import 'package:tasks/utils/sql/db_helper.dart';
 
 class SplashPage extends StatefulWidget {
@@ -14,13 +17,15 @@ class _SplashPageState extends State<SplashPage> {
 
     Future futureA = DatabaseHelper.getInstance().db;
 
-    Future.wait([futureA]).then((List values) {
-//      Usuario user = values[2];
-//      if (user != null) {
-//        push(context, HomePage(), replace: true);
-//      } else {
-//        push(context, LoginPage());
-//      }
+    Future<Usuario> futureB = Usuario.get();
+
+    Future.wait([futureA, futureB]).then((List values) {
+      Usuario user = values[1];
+      if (user != null) {
+        push(context, HomePage(), replace: true);
+      } else {
+        push(context, LoginPage());
+      }
     });
 
     _delay();

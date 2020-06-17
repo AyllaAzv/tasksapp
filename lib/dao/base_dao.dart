@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
-import 'package:tasks/entitys/entity.dart';
+import 'package:tasks/model/entity.dart';
 import 'package:tasks/utils/sql/db_helper.dart';
 
 abstract class BaseDAO<T extends Entity> {
@@ -13,6 +13,13 @@ abstract class BaseDAO<T extends Entity> {
   Future<int> save(T entity) async {
     var dbClient = await db;
     var id = await dbClient.insert(tableName, entity.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    return id;
+  }
+
+  Future<int> update(T entity) async {
+    var dbClient = await db;
+    var id = await dbClient.update(tableName, entity.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;
   }
@@ -31,6 +38,12 @@ abstract class BaseDAO<T extends Entity> {
 
   Future<T> findById(int id) async {
     List<T> list = await query('select * from $tableName where id = ?', [id]);
+
+    return list.length > 0 ? list.first : null;
+  }
+
+  Future<T> findByAtributs(String sql, [List<dynamic> arguments]) async {
+    List<T> list = await query(sql, arguments);
 
     return list.length > 0 ? list.first : null;
   }

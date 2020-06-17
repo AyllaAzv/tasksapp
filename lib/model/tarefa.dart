@@ -1,12 +1,11 @@
-import 'package:tasks/constants/ColorTask.dart';
-import 'package:tasks/entitys/entity.dart';
+import 'package:tasks/model/entity.dart';
 
 class Tarefa extends Entity {
   int id;
   String titulo;
   String descricao;
   String data;
-  ColorTask cor;
+  String cor;
   bool fixo;
   int categoria_id;
   int usuario_id;
@@ -28,9 +27,14 @@ class Tarefa extends Entity {
     descricao = map['descricao'];
     data = map['data'];
     cor = map['cor'];
-    fixo = map['fixo'];
     categoria_id = map['categoria_id'];
     usuario_id = map['usuario_id'];
+
+    if(map['fixo'] == 1) {
+      fixo = true;
+    } else {
+      fixo = false;
+    }
   }
 
   Map<String, dynamic> toMap() {

@@ -8,7 +8,7 @@ alert(BuildContext context, String msg, {Function callback}) {
       return WillPopScope(
         onWillPop: () async => false,
         child: AlertDialog(
-          title: Image.asset("assets/images/logo_estoque.png", height: 50),
+          title: Image.asset("assets/images/logo.png", height: 50, color: Colors.black45),
           content: Text(
             msg,
           ),

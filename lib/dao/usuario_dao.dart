@@ -1,5 +1,5 @@
 import 'package:tasks/dao/base_dao.dart';
-import 'package:tasks/entitys/usuario.dart';
+import 'package:tasks/model/usuario.dart';
 
 class UsuarioDAO extends BaseDAO<Usuario> {
   @override
@@ -9,4 +9,9 @@ class UsuarioDAO extends BaseDAO<Usuario> {
 
   @override
   String get tableName => "usuarios";
+
+  Future<Usuario> login(String email, String senha) {
+    List arguments = [email, senha];
+    return findByAtributs('select * from usuarios where email = ? and senha = ?', arguments);
+  }
 }

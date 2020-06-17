@@ -1,6 +1,6 @@
-import 'package:tasks/entitys/entity.dart';
+import 'package:tasks/model/entity.dart';
 
-class Categoria extends Entity{
+class Categoria extends Entity {
   int id;
   bool estudo;
   bool trabalho;
@@ -15,9 +15,24 @@ class Categoria extends Entity{
 
   Categoria.fromMap(Map<String, dynamic> map) {
     id = map['id'];
-    estudo = map['estudo'];
-    trabalho = map['trabalho'];
-    pessoal = map['pessoal'];
+
+    if (map['estudo'] == 1) {
+      estudo = true;
+    } else {
+      estudo = false;
+    }
+
+    if (map['trabalho'] == 1) {
+      trabalho = true;
+    } else {
+      trabalho = false;
+    }
+
+    if (map['pessoal'] == 1) {
+      pessoal = true;
+    } else {
+      pessoal = false;
+    }
   }
 
   Map<String, dynamic> toMap() {

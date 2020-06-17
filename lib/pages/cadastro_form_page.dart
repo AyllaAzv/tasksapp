@@ -1,9 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tasks/dao/usuario_dao.dart';
+import 'package:tasks/model/usuario.dart';
+import 'package:tasks/pages/login_page.dart';
+import 'package:tasks/services/firebase_service.dart';
 import 'package:tasks/utils/alert.dart';
-import 'package:tasks/widgets/app_button.dart';
-import 'package:tasks/widgets/app_text.dart';
+import 'package:tasks/utils/nav.dart';
+import 'file:///C:/Users/aylla/Documents/workspace/tasks/lib/widgets/forms/app_button.dart';
+import 'package:tasks/widgets/forms/app_text.dart';
 
 class CadastroFormPage extends StatefulWidget {
   @override
@@ -92,19 +97,41 @@ class _CadastroFormPageState extends State<CadastroFormPage> {
   }
 
   _headerFoto() {
-    return InkWell(
-      onTap: _onClickFoto,
-      child: _file != null
-          ? Image.file(
-              _file,
-              height: 200,
-              fit: BoxFit.cover,
-            )
-          : Image.asset(
-              "assets/images/sem-imagem.png",
-              height: 200,
-            ),
+    return Column(
+      children: <Widget>[
+        InkWell(
+            onTap: _onClickFoto,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  width: 100.0,
+                  height: 100.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(fit: BoxFit.cover, image: _image()),
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text('Selecione uma imagem',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black45,
+                    ))
+              ],
+            )),
+      ],
     );
+  }
+
+  _image() {
+    return _file != null
+        ? FileImage(
+            _file,
+          )
+        : NetworkImage(
+            'https://devtalk.blender.org/uploads/default/original/2X/c/cbd0b1a6345a44b58dda0f6a355eb39ce4e8a56a.png',
+          );
   }
 
   void _onClickFoto() async {
@@ -138,18 +165,32 @@ class _CadastroFormPageState extends State<CadastroFormPage> {
       alert(context, "As senhas não conferem.");
       return;
     }
-//
-//    final response = await UsuarioService.cadastrar(usuario, senha);
-//
-//    setState(() {
-//      _showProgress = false;
-//    });
-//
-//    if (response.ok) {
-//      push(context, LoginPage(), replace: true);
-//    } else {
-//      alert(context, response.msg);
-//    }
+
+    if (_file != null) {
+      foto = await FirebaseService.uploadFirebaseStorage(_file);
+    } else {
+      foto =
+          'https://w7.pngwing.com/pngs/896/922/png-transparent-computer-icons-user-profile-profile-miscellaneous-angle-white.png';
+    }
+
+    Usuario usuario = new Usuario(
+      nome: nome,
+      email: email,
+      senha: senha,
+      foto: foto,
+    );
+
+    int response = await UsuarioDAO().save(usuario);
+
+    setState(() {
+      _showProgress = false;
+    });
+
+    if (response != null) {
+      push(context, LoginPage(), replace: true);
+    } else {
+      alert(context, 'Erro no cadastro de usuário! Tente novamente.');
+    }
   }
 
   String _validateNome(String text) {

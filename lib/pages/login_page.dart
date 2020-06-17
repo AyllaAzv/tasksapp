@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tasks/dao/usuario_dao.dart';
+import 'package:tasks/model/usuario.dart';
 import 'package:tasks/pages/home_page.dart';
+import 'package:tasks/utils/alert.dart';
 import 'package:tasks/utils/nav.dart';
-import 'package:tasks/widgets/app_button_login.dart';
-import 'package:tasks/widgets/app_text_login.dart';
+import 'file:///C:/Users/aylla/Documents/workspace/tasks/lib/widgets/forms/app_button_login.dart';
+import 'package:tasks/widgets/forms/app_text_login.dart';
 
 import 'cadastro_form_page.dart';
 
@@ -19,8 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   final _tSenha = TextEditingController();
 
   final _focusSenha = FocusNode();
-
-//  final _model = LoginModel();
 
   var _showProgress = false;
 
@@ -121,35 +122,31 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future _onClickLogin() async {
-    push(context, HomePage(), replace: true);
-//    bool formOk = _formKey.currentState.validate();
-//
-//    if (!formOk) {
-//      return;
-//    }
-//
-//    setState(() {
-//      _showProgress = true;
-//    });
-//
-//    String usuario = _tUsuario.text;
-//    String senha = _tSenha.text;
-//
-//    await _model.login(usuario, senha);
-//
-//    ApiResponse response = _model.response;
-//
-//    setState(() {
-//      _showProgress = false;
-//    });
-//
-//    if (response.ok) {
-//      Usuario user = response.result;
-//      print(">>> ${user.usuario}");
-//      push(context, HomePage(), replace: true);
-//    } else {
-//      alert(context, response.msg);
-//    }
+    bool formOk = _formKey.currentState.validate();
+
+    if (!formOk) {
+      return;
+    }
+
+    setState(() {
+      _showProgress = true;
+    });
+
+    String email = _tEmail.text;
+    String senha = _tSenha.text;
+
+    Usuario usuario = await UsuarioDAO().login(email, senha);
+
+    setState(() {
+      _showProgress = false;
+    });
+
+    if (usuario != null) {
+      usuario.save();
+      push(context, HomePage(), replace: true);
+    } else {
+      alert(context, "E-mail ou senha inválido! Tente novamente.");
+    }
   }
 
   String _validateEmail(String text) {

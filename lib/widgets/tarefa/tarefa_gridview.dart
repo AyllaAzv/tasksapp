@@ -1,18 +1,19 @@
-
 import 'package:flutter/material.dart';
-import 'package:tasks/entitys/tarefa.dart';
+import 'package:share/share.dart';
+import 'package:tasks/model/tarefa.dart';
+import 'package:tasks/pages/tarefa_form_page.dart';
+import 'package:tasks/utils/nav.dart';
 
-
-class TarefasGridView extends StatefulWidget {
+class TarefaGridView extends StatefulWidget {
   List<Tarefa> tarefas;
 
-  TarefasGridView(this.tarefas);
+  TarefaGridView(this.tarefas);
 
   @override
-  _TarefasGridViewState createState() => _TarefasGridViewState();
+  _TarefaGridViewState createState() => _TarefaGridViewState();
 }
 
-class _TarefasGridViewState extends State<TarefasGridView> {
+class _TarefaGridViewState extends State<TarefaGridView> {
   @override
   Widget build(BuildContext context) {
     return _gridView();
@@ -25,7 +26,7 @@ class _TarefasGridViewState extends State<TarefasGridView> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 1.5),
+            (MediaQuery.of(context).size.height / 1.8),
       ),
       itemBuilder: (context, index) {
         return _itemView(widget.tarefas, index);
@@ -47,19 +48,38 @@ class _TarefasGridViewState extends State<TarefasGridView> {
           padding: EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                t.titulo.toUpperCase(),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    t.titulo.toUpperCase(),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF23acbc)),
+                  ),
+                  Text(
+                    t.descricao,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Color(0xFF23acbc), fontSize: 17),
+                  ),
+                ],
               ),
-              Text(
-                "Cod: ${t.descricao}",
-                style:
-                    TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(t.data, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF23acbc)),),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    color: Color(0xFF23acbc),
+                    onPressed: () {
+                      push(context, TarefaFormPage(tarefa: t));
+                    },
+                  )
+                ],
               ),
-              Text(t.data)
             ],
           ),
         ),
@@ -91,7 +111,7 @@ class _TarefasGridViewState extends State<TarefasGridView> {
               ),
               onTap: () {
                 Navigator.pop(context);
-//                push(context, ProdutoPage(produto));
+//                push(context, TarefaFormPage(tarefa: tarefa));
               },
             ),
             ListTile(
@@ -99,7 +119,7 @@ class _TarefasGridViewState extends State<TarefasGridView> {
               leading: Icon(Icons.share),
               onTap: () {
                 Navigator.pop(context);
-//                _onClickCompartilhar(produto);
+                _onClickCompartilhar(tarefa);
               },
             ),
           ],
@@ -108,7 +128,7 @@ class _TarefasGridViewState extends State<TarefasGridView> {
     );
   }
 
-//  _onClickCompartilhar(Produto produto) {
-//    Share.share(produto.nome);
-//  }
+  _onClickCompartilhar(Tarefa tarefa) {
+    Share.share(tarefa.descricao);
+  }
 }

@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:tasks/model/usuario.dart';
+import 'package:tasks/pages/login_page.dart';
+import 'package:tasks/utils/nav.dart';
 
 class DrawerList extends StatelessWidget {
+  Future<Usuario> future = Usuario.get();
+
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Drawer(
         child: ListView(
           children: <Widget>[
-            _header(),
+            FutureBuilder<Usuario>(
+              future: future,
+              builder: (context, snapshot) {
+                Usuario user = snapshot.data;
+
+                return user != null ?_header(user) : Container();
+              },
+            ),
             ListTile(
               leading: Icon(Icons.home),
               title: Text("Home"),
@@ -38,26 +50,25 @@ class DrawerList extends StatelessWidget {
     );
   }
 
-  _header() {
+  _header(Usuario user) {
     return UserAccountsDrawerHeader(
       accountName: Text(
-        'Usuário',
+        user.nome,
       ),
       accountEmail: Text(
-        'usuario@gmail.com',
+        user.email,
       ),
       currentAccountPicture: CircleAvatar(
         backgroundImage: NetworkImage(
-          'https://w7.pngwing.com/pngs/896/922/png-transparent-computer-icons-user-profile-profile-miscellaneous-angle-white.png',
+          user.foto,
         ),
       ),
     );
   }
 
   _onClickLogout(context) {
-//      Usuario.clear();
-//      FirebaseService().logout();
-//      Navigator.pop(context);
-//      push(context, LoginPage(), replace: true);
+    Usuario.clear();
+    Navigator.pop(context);
+    push(context, LoginPage(), replace: true);
   }
 }

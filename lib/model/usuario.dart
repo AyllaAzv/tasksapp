@@ -1,6 +1,9 @@
-import 'package:tasks/entitys/entity.dart';
+import 'package:tasks/model/entity.dart';
+import 'dart:convert' as convert;
 
-class Usuario extends Entity{
+import 'package:tasks/utils/prefs.dart';
+
+class Usuario extends Entity {
   int id;
   String nome;
   String email;
@@ -33,27 +36,27 @@ class Usuario extends Entity{
     return data;
   }
 
-//  static void clear() {
-//    Prefs.setString("user.prefs", "");
-//  }
+  static void clear() {
+    Prefs.setString("user.prefs", "");
+  }
 
-//  void save() {
-//    Map map = toMap();
-//
-//    String json = convert.json.encode(map);
-//
-//    Prefs.setString("user.prefs", json);
-//  }
-//
-//  static Future<Usuario> get() async {
-//    String json = await Prefs.getString("user.prefs");
-//
-//    if (json.isEmpty) {
-//      return null;
-//    }
-//
-//    Map map = convert.json.decode(json);
-//
-//    return Usuario.fromMap(map);
-//  }
+  void save() {
+    Map map = toMap();
+
+    String json = convert.json.encode(map);
+
+    Prefs.setString("user.prefs", json);
+  }
+
+  static Future<Usuario> get() async {
+    String json = await Prefs.getString("user.prefs");
+
+    if (json.isEmpty) {
+      return null;
+    }
+
+    Map map = convert.json.decode(json);
+
+    return Usuario.fromMap(map);
+  }
 }
