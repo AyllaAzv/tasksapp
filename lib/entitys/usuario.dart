@@ -1,25 +1,35 @@
-class User {
-  int id;
-  String usuario;
-  String senha;
+import 'package:tasks/entitys/entity.dart';
 
-  User({
+class Usuario extends Entity{
+  int id;
+  String nome;
+  String email;
+  String senha;
+  String foto;
+
+  Usuario({
     this.id,
-    this.usuario,
+    this.nome,
+    this.email,
     this.senha,
+    this.foto,
   });
 
-  User.fromMap(Map<String, dynamic> map) {
+  Usuario.fromMap(Map<String, dynamic> map) {
     id = map['id'];
-    usuario = map['usuario'];
+    nome = map['nome'];
+    email = map['email'];
     senha = map['senha'];
+    foto = map['foto'];
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['usuario'] = this.usuario;
+    data['nome'] = this.nome;
+    data['email'] = this.email;
     data['senha'] = this.senha;
+    data['foto'] = this.foto;
     return data;
   }
 

@@ -1,0 +1,3 @@
+CREATE TABLE usuarios(id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, email TEXT, senha TEXT, foto TEXT);
+CREATE TABLE tarefas(id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, descricao TEXT, data TEXT, cor TEXT, fixo INTEGER, categoria_id INTEGER, usuario_id INTEGER);
+CREATE TABLE categorias(id INTEGER PRIMARY KEY AUTOINCREMENT, estudo INTEGER, trabalho INTEGER, pessoal INTEGER);
