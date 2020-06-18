@@ -12,6 +12,6 @@ class UsuarioDAO extends BaseDAO<Usuario> {
 
   Future<Usuario> login(String email, String senha) {
     List arguments = [email, senha];
-    return findByAtributs('select * from usuarios where email = ? and senha = ?', arguments);
+    return findByArguments('select * from usuarios where email = ? and senha = ?', arguments);
   }
 }

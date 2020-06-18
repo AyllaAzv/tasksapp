@@ -8,7 +8,10 @@ class TarefaController = TarefaControllerBase with _$TarefaController;
 
 abstract class TarefaControllerBase with Store {
   @observable
-  List<Tarefa> tarefas;
+  List<Tarefa> tarefas = List<Tarefa>();
+
+  @observable
+  List<Tarefa> tarefasFixas = List<Tarefa>();
 
   @observable
   Exception error;
@@ -18,7 +21,17 @@ abstract class TarefaControllerBase with Store {
     try {
       this.tarefas = await TarefaDAO().findByUser(userId);
     } catch (e) {
-      print(e);
+      print("erro");
+      this.error = e;
+    }
+  }
+
+  @action
+  getTarefasFixas(int userId) async {
+    try {
+      this.tarefasFixas = await TarefaDAO().findByUserAndFixed(userId);
+    } catch (e) {
+      print("erro");
       this.error = e;
     }
   }

@@ -42,7 +42,7 @@ abstract class BaseDAO<T extends Entity> {
     return list.length > 0 ? list.first : null;
   }
 
-  Future<T> findByAtributs(String sql, [List<dynamic> arguments]) async {
+  Future<T> findByArguments(String sql, [List<dynamic> arguments]) async {
     List<T> list = await query(sql, arguments);
 
     return list.length > 0 ? list.first : null;

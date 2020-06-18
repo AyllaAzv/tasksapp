@@ -24,6 +24,21 @@ mixin _$TarefaController on TarefaControllerBase, Store {
     });
   }
 
+  final _$tarefasFixasAtom = Atom(name: 'TarefaControllerBase.tarefasFixas');
+
+  @override
+  List<Tarefa> get tarefasFixas {
+    _$tarefasFixasAtom.reportRead();
+    return super.tarefasFixas;
+  }
+
+  @override
+  set tarefasFixas(List<Tarefa> value) {
+    _$tarefasFixasAtom.reportWrite(value, super.tarefasFixas, () {
+      super.tarefasFixas = value;
+    });
+  }
+
   final _$errorAtom = Atom(name: 'TarefaControllerBase.error');
 
   @override
@@ -47,10 +62,20 @@ mixin _$TarefaController on TarefaControllerBase, Store {
     return _$getTarefasAsyncAction.run(() => super.getTarefas(userId));
   }
 
+  final _$getTarefasFixasAsyncAction =
+      AsyncAction('TarefaControllerBase.getTarefasFixas');
+
+  @override
+  Future getTarefasFixas(int userId) {
+    return _$getTarefasFixasAsyncAction
+        .run(() => super.getTarefasFixas(userId));
+  }
+
   @override
   String toString() {
     return '''
 tarefas: ${tarefas},
+tarefasFixas: ${tarefasFixas},
 error: ${error}
     ''';
   }

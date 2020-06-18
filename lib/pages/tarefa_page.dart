@@ -3,7 +3,6 @@ import 'package:tasks/dao/categoria_dao.dart';
 import 'package:tasks/dao/tarefa_dao.dart';
 import 'package:tasks/model/categoria.dart';
 import 'package:tasks/model/tarefa.dart';
-import 'package:tasks/model/usuario.dart';
 import 'package:tasks/pages/home_page.dart';
 import 'package:tasks/utils/alert.dart';
 import 'package:tasks/utils/nav.dart';

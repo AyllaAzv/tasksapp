@@ -116,7 +116,7 @@ class _TarefaFormPageState extends State<TarefaFormPage> {
           SizedBox(height: 15),
           AppButton(
             'Salvar',
-            onPressed: tarefa == null ? _onClickSalvar : _onClickEditar,
+            onPressed: _onClickSalvar,
             showProgress: _showProgress,
           ),
         ],
@@ -126,7 +126,7 @@ class _TarefaFormPageState extends State<TarefaFormPage> {
 
   _switch() {
     return SwitchListTile(
-      title: Text('Fixar'),
+      title: Text('Importante'),
       value: fixar,
       onChanged: (bool value) {
         setState(() {
@@ -245,93 +245,50 @@ class _TarefaFormPageState extends State<TarefaFormPage> {
       _showProgress = true;
     });
 
-    String titulo = _tTitulo.text;
-    String descricao = _tDescricao.text;
-    String data = _tData.text;
-
     int categoriaId = await CategoriaDAO().save(categoria);
+
+    print(categoria.toMap());
 
     if (categoriaId == null) {
       setState(() {
         _showProgress = false;
       });
 
-      alert(context, "Erro ao salvar tarefa! Tente novamente.");
+      alert(context, "Erro ao editar tarefa! Tente novamente.");
 
       return;
     }
 
-    Tarefa novaTarefa = Tarefa(
-      titulo: titulo,
-      descricao: descricao,
-      data: data,
-      cor: cor.toString(),
-      fixo: fixar,
-      categoria_id: categoriaId,
-      usuario_id: user.id,
-    );
+    Tarefa t = tarefa ?? Tarefa();
 
-    int tarefaId = await TarefaDAO().save(novaTarefa);
+    t.titulo = _tTitulo.text;
+    t.descricao = _tDescricao.text;
+    t.data = _tData.text;
+    t.fixo = fixar;
+    t.cor = cor.toString();
+    t.categoria_id = categoriaId;
+    t.usuario_id = user.id;
+
+    print(t.toMap());
+
+    int tarefaId = await TarefaDAO().save(t);
 
     setState(() {
       _showProgress = false;
     });
 
     if (tarefaId != null) {
-      push(context, HomePage(), replace: true);
+      _goToHome();
     } else {
-      alert(context, "Erro ao salvar tarefa! Tente novamente.");
+      alert(context, "Erro ao editar tarefa! Tente novamente.");
     }
   }
 
-  _onClickEditar() async {
-    bool formOk = _formKey.currentState.validate();
-
-    if (!formOk) {
-      return;
-    }
-
-    setState(() {
-      _showProgress = true;
-    });
-
-    String titulo = _tTitulo.text;
-    String descricao = _tDescricao.text;
-    String data = _tData.text;
-
-    int categoriaId = await CategoriaDAO().update(categoria);
-
-    if (categoriaId == null) {
-      setState(() {
-        _showProgress = false;
-      });
-
-      alert(context, "Erro ao editar tarefa! Tente novamente.");
-
-      return;
-    }
-
-    Tarefa novaTarefa = Tarefa(
-      id: tarefa.id,
-      titulo: titulo,
-      descricao: descricao,
-      data: data,
-      cor: cor.toString(),
-      fixo: fixar,
-      categoria_id: tarefa.categoria_id,
-      usuario_id: tarefa.usuario_id,
-    );
-
-    int tarefaId = await TarefaDAO().update(novaTarefa);
-
-    setState(() {
-      _showProgress = false;
-    });
-
-    if (tarefaId != null) {
-      push(context, HomePage(), replace: true);
+  _goToHome() {
+    if (fixar) {
+      push(context, HomePage(index: 0), replace: true);
     } else {
-      alert(context, "Erro ao editar tarefa! Tente novamente.");
+      push(context, HomePage(index: 1), replace: true);
     }
   }
 

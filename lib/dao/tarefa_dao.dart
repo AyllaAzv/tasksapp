@@ -11,6 +11,10 @@ class TarefaDAO extends BaseDAO<Tarefa> {
   String get tableName => "tarefas";
 
   Future<List<Tarefa>> findByUser(int userId) {
-    return query('select * from tarefas where usuario_id = ?', [userId]);
+    return query('select * from tarefas where usuario_id = ? and fixo = 0', [userId]);
+  }
+
+  Future<List<Tarefa>> findByUserAndFixed(int userId) {
+    return query('select * from tarefas where usuario_id = ? and fixo = 1', [userId]);
   }
 }

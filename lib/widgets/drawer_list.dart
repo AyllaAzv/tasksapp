@@ -18,7 +18,7 @@ class DrawerList extends StatelessWidget {
               builder: (context, snapshot) {
                 Usuario user = snapshot.data;
 
-                return user != null ?_header(user) : Container();
+                return user != null ? _header(user) : Container();
               },
             ),
             ListTile(
@@ -38,6 +38,17 @@ class DrawerList extends StatelessWidget {
               trailing: Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.pop(context);
+
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Mais informações!'),
+                    duration: Duration(seconds: 2),
+                    action: SnackBarAction(
+                      label: 'OK',
+                      onPressed: () {},
+                    ),
+                  ),
+                );
               },
             ),
             ListTile(
