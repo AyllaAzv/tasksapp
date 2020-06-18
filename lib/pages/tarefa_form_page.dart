@@ -47,18 +47,23 @@ class _TarefaFormPageState extends State<TarefaFormPage> {
 
     future.then((value) => user = value);
 
-    if(tarefa != null) {
-    _
+    if (tarefa != null) {
+      _preencheCampos(tarefa);
     }
   }
 
-  _preencheCampos(tarefa) {
-    _tTitulo.text = tarefa.titulo;
-    _tDescricao.text = tarefa.descricao;
-    _tData.text = tarefa.data;
-    fixar = tarefa.fixo;
+  _preencheCampos(Tarefa tarefa) {
+    CategoriaDAO().findById(tarefa.categoria_id).then((value) {
+      _tTitulo.text = tarefa.titulo;
+      _tDescricao.text = tarefa.descricao;
+      _tData.text = tarefa.data;
 
-    //cor
+      setState(() {
+        fixar = tarefa.fixo;
+        cor = corEnum(tarefa.cor);
+        categoria = value;
+      });
+    });
   }
 
   @override
@@ -68,7 +73,7 @@ class _TarefaFormPageState extends State<TarefaFormPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Nova Tarefa",
+          tarefa == null ? "Nova Tarefa" : "Editar Tarefa",
         ),
       ),
       body: _body(),
@@ -111,7 +116,7 @@ class _TarefaFormPageState extends State<TarefaFormPage> {
           SizedBox(height: 15),
           AppButton(
             'Salvar',
-            onPressed: _onClickSalvar,
+            onPressed: tarefa == null ? _onClickSalvar : _onClickEditar,
             showProgress: _showProgress,
           ),
         ],
@@ -276,6 +281,57 @@ class _TarefaFormPageState extends State<TarefaFormPage> {
       push(context, HomePage(), replace: true);
     } else {
       alert(context, "Erro ao salvar tarefa! Tente novamente.");
+    }
+  }
+
+  _onClickEditar() async {
+    bool formOk = _formKey.currentState.validate();
+
+    if (!formOk) {
+      return;
+    }
+
+    setState(() {
+      _showProgress = true;
+    });
+
+    String titulo = _tTitulo.text;
+    String descricao = _tDescricao.text;
+    String data = _tData.text;
+
+    int categoriaId = await CategoriaDAO().update(categoria);
+
+    if (categoriaId == null) {
+      setState(() {
+        _showProgress = false;
+      });
+
+      alert(context, "Erro ao editar tarefa! Tente novamente.");
+
+      return;
+    }
+
+    Tarefa novaTarefa = Tarefa(
+      id: tarefa.id,
+      titulo: titulo,
+      descricao: descricao,
+      data: data,
+      cor: cor.toString(),
+      fixo: fixar,
+      categoria_id: tarefa.categoria_id,
+      usuario_id: tarefa.usuario_id,
+    );
+
+    int tarefaId = await TarefaDAO().update(novaTarefa);
+
+    setState(() {
+      _showProgress = false;
+    });
+
+    if (tarefaId != null) {
+      push(context, HomePage(), replace: true);
+    } else {
+      alert(context, "Erro ao editar tarefa! Tente novamente.");
     }
   }
 

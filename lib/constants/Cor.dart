@@ -19,12 +19,22 @@ String nomeCor(CorEnum cor) {
 corHex(CorEnum cor) {
   switch (cor) {
     case CorEnum.PADRAO:
-      return '#FFF';
+      return 'ffffff';
     case CorEnum.VERDE:
-      return '#99FF99';
+      return 'befc92';
       break;
     case CorEnum.AMARELO:
-      return '#FF6666';
+      return 'fafc92';
       break;
+  }
+}
+
+CorEnum corEnum(String cor) {
+  if(CorEnum.PADRAO.toString() == cor) {
+    return CorEnum.PADRAO;
+  } else if(CorEnum.AMARELO.toString() == cor) {
+    return CorEnum.AMARELO;
+  } else {
+    return CorEnum.VERDE;
   }
 }

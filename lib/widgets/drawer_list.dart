@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tasks/model/usuario.dart';
+import 'package:tasks/pages/home_page.dart';
 import 'package:tasks/pages/login_page.dart';
 import 'package:tasks/utils/nav.dart';
 
@@ -26,6 +27,7 @@ class DrawerList extends StatelessWidget {
               subtitle: Text("Ver tarefas"),
               trailing: Icon(Icons.chevron_right),
               onTap: () {
+                push(context, HomePage());
                 Navigator.pop(context);
               },
             ),

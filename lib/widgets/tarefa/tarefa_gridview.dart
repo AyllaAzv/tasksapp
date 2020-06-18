@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:tasks/constants/Cor.dart';
 import 'package:tasks/model/tarefa.dart';
 import 'package:tasks/pages/tarefa_form_page.dart';
+import 'package:tasks/pages/tarefa_page.dart';
 import 'package:tasks/utils/nav.dart';
 
 class TarefaGridView extends StatefulWidget {
@@ -36,14 +38,16 @@ class _TarefaGridViewState extends State<TarefaGridView> {
 
   _itemView(List<Tarefa> tarefas, int index) {
     Tarefa t = tarefas[index];
+    CorEnum cor = corEnum(t.cor);
+    int corCard = int.parse('0xFF${corHex(cor)}');
 
     return GestureDetector(
       onTap: () {
-//        push(context, ProdutoPage(p));
+        push(context, TarefaPage(t));
       },
       onLongPress: () => _onLongClickProduto(context, t),
       child: Card(
-        color: Colors.grey[100],
+        color: Color(corCard),
         child: Container(
           padding: EdgeInsets.all(10),
           child: Column(
@@ -55,13 +59,13 @@ class _TarefaGridViewState extends State<TarefaGridView> {
                 children: <Widget>[
                   Text(
                     t.titulo.toUpperCase(),
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF23acbc)),
                   ),
                   Text(
                     t.descricao,
-                    maxLines: 4,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Color(0xFF23acbc), fontSize: 17),
                   ),
@@ -107,11 +111,11 @@ class _TarefaGridViewState extends State<TarefaGridView> {
             ListTile(
               title: Text("Detalhes"),
               leading: Icon(
-                Icons.shopping_basket,
+                Icons.more,
               ),
               onTap: () {
                 Navigator.pop(context);
-//                push(context, TarefaFormPage(tarefa: tarefa));
+                push(context, TarefaPage(tarefa));
               },
             ),
             ListTile(
@@ -129,6 +133,7 @@ class _TarefaGridViewState extends State<TarefaGridView> {
   }
 
   _onClickCompartilhar(Tarefa tarefa) {
-    Share.share(tarefa.descricao);
+    String texto = "${tarefa.titulo} \n\n${tarefa.descricao}";
+    Share.share(texto);
   }
 }
